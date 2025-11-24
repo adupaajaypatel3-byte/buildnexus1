@@ -71,7 +71,7 @@
         .feature-card h3 { color: #1E90FF; margin-bottom: 10px; }
         .feature-card p { color: #555; }
 
-        /* Testimonials Section */
+        /* --- UPDATED TESTIMONIAL LIST STYLING --- */
         .testimonials-section { 
             padding: 5rem 0; 
             background: #F8FBFF;
@@ -80,28 +80,43 @@
         .testimonials-section h2 {
             margin-bottom: 2rem;
         }
+
+        /* List Container */
         .slider-container {
             position: relative;
             max-width: 800px;
             margin: 0 auto;
-            overflow: hidden; 
-            border-radius: 12px;
             padding: 20px 0; 
         }
+
+        /* Testimonial List - Now acts as a vertical stack */
         .testimonial-slider {
-            display: flex;
-            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            width: 300%; 
+            display: block;
+            width: 100%; 
+            padding: 0;
         }
+
+        /* Individual Card Styling for vertical display and Scroll Reveal Effect */
         .testimonial-card {
-            width: 33.33%; 
-            flex-shrink: 0;
-            padding: 40px;
+            width: 100%; 
+            margin-bottom: 30px; 
+            padding: 30px;
             background: #fff;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             border-radius: 12px;
             text-align: center;
+            /* Initial state for Scroll Reveal */
+            opacity: 0; 
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
         }
+
+        /* Class added by JS to make cards visible */
+        .testimonial-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .testimonial-card p {
             font-style: italic;
             font-size: 1.1rem;
@@ -112,23 +127,11 @@
             color: #1E90FF;
             margin-top: 10px;
         }
+        /* Dots removed as they are no longer needed */
         .testimonial-dots {
-            text-align: center;
-            margin-top: 20px;
+            display: none; 
         }
-        .dot {
-            height: 10px;
-            width: 10px;
-            margin: 0 5px;
-            background-color: #ccc;
-            border-radius: 50%;
-            display: inline-block;
-            transition: background-color 0.3s;
-            cursor: pointer;
-        }
-        .dot.active {
-            background-color: #1E90FF;
-        }
+        /* --- END UPDATED TESTIMONIAL STYLING --- */
 
 
         /* AI Mockup */
@@ -360,7 +363,7 @@
 <section class="ai-mockup container" id="mockup-section">
     <h2>Smart Construction, Smarter Decisions</h2>
     <div class="mockup-wrapper">
-        <img src="assets/ai-mockup-final.png" alt="AI Construction Mockup" onerror="window.handleImageError(this)">
+        <img src="assets/ai-mockup-final.png" alt="AI Construction Mockup" onerror="handleImageError(this)">
         <div class="blueprint-grid"></div>
     </div>
 </section>
@@ -412,17 +415,15 @@
 <footer>&copy; 2025 BuildNexus. All rights reserved.</footer>
 
 <script>
+// *** GLOBAL FUNCTION: Placed outside DOMContentLoaded to fix the Syntax Error on Vercel/CDN ***
+const PLACEHOLDER_URL = 'https://picsum.photos/900/500';
+
+function handleImageError(imageElement) {
+    imageElement.src = PLACEHOLDER_URL;
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     
-    // --- Safe URL Definition (Fixing the Syntax Error) ---
-    // Encoded the URL string to prevent local browser misinterpretation of characters like ? and =
-    const PLACEHOLDER_URL = 'https://via.placeholder.com/900x500%3Ftext%3DAI%2BMockup';
-
-    // Helper function to safely load a placeholder if the local image is missing
-    window.handleImageError = function(imageElement) {
-        imageElement.src = PLACEHOLDER_URL;
-    }
-
     // --- 1. Background Parallax Effect ---
     const body = document.body;
     const parallaxStrength = 0.005; 
@@ -443,59 +444,28 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.addEventListener('mousemove', handleMouseMove);
 
-    // --- 2. Testimonial Slider Logic (Now protected from the syntax error) ---
-    const slider = document.getElementById('testimonialSlider');
-    const dotsContainer = document.getElementById('testimonialDots');
-    const totalSlides = slider ? document.querySelectorAll('.testimonial-card').length : 0;
-    let currentSlide = 0;
-    const intervalTime = 5000; 
-    let slideInterval;
+    // --- 2. Testimonial Scroll Reveal Logic (Replaces Slider) ---
+    const testimonialCards = document.querySelectorAll('.testimonial-card');
 
-    function updateSlider() {
-        if (!slider) return;
-        
-        const translateValue = -currentSlide * 100; 
-        slider.style.transform = translateX(${translateValue}%);
+    const observerOptions = {
+        root: null, // relative to the viewport
+        rootMargin: '0px',
+        threshold: 0.2 // Trigger when 20% of the item is visible
+    };
 
-        document.querySelectorAll('.dot').forEach((dot, index) => {
-            dot.classList.remove('active');
-            if (index === currentSlide) {
-                dot.classList.add('active');
+    const testimonialObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // Optional: Stop observing once it's visible
+                observer.unobserve(entry.target); 
             }
         });
-    }
+    }, observerOptions);
 
-    function startSlider() {
-        if (!slider || totalSlides === 0) return;
-        
-        slideInterval = setInterval(() => {
-            currentSlide = (currentSlide + 1) % totalSlides;
-            updateSlider();
-        }, intervalTime);
-    }
-
-    function stopSlider() {
-        clearInterval(slideInterval);
-    }
-
-    if (dotsContainer) {
-        dotsContainer.addEventListener('click', (e) => {
-            if (e.target.classList.contains('dot')) {
-                stopSlider();
-                currentSlide = parseInt(e.target.getAttribute('data-slide'));
-                updateSlider();
-                startSlider();
-            }
-        });
-    }
-
-    // Delay initialization to avoid local file timing/loading errors
-    setTimeout(() => {
-        if (slider) { 
-            updateSlider(); 
-            startSlider();
-        }
-    }, 1000);
+    testimonialCards.forEach(card => {
+        testimonialObserver.observe(card);
+    });
 
     // --- 3. Blueprint Grid Animation Setup ---
     const grid = document.querySelector('.blueprint-grid');
