@@ -71,7 +71,7 @@
         .feature-card h3 { color: #1E90FF; margin-bottom: 10px; }
         .feature-card p { color: #555; }
 
-        /* Testimonials Section (FIXED CSS) */
+        /* Testimonials Section */
         .testimonials-section { 
             padding: 5rem 0; 
             background: #F8FBFF;
@@ -84,17 +84,17 @@
             position: relative;
             max-width: 800px;
             margin: 0 auto;
-            overflow: hidden; /* This hides the other slides */
+            overflow: hidden; 
             border-radius: 12px;
             padding: 20px 0; 
         }
         .testimonial-slider {
             display: flex;
             transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            width: 300%; /* Total width for 3 slides */
+            width: 300%; 
         }
         .testimonial-card {
-            width: 33.33%; /* Each card takes up one-third of the 300% parent */
+            width: 33.33%; 
             flex-shrink: 0;
             padding: 40px;
             background: #fff;
@@ -141,9 +141,9 @@
         .blueprint-grid::before, .blueprint-grid::after { content: ''; position: absolute; width: 2px; height: 100%; background: rgba(30,144,255,0.3); animation: slide-vertical 3s linear infinite; }
         .blueprint-grid::after { left: 25%; animation-delay: 1s; }
         .blueprint-grid span { position: absolute; width: 100%; height: 2px; background: rgba(30,144,255,0.2); animation: slide-horizontal 3s linear infinite; }
-        .blueprint-grid span:nth-child(1) { top: 20%; animation-delay: 0s; }
-        .blueprint-grid span:nth-child(2) { top: 50%; animation-delay: 1s; }
-        .blueprint-grid span:nth-child(3) { top: 70%; animation-delay: 2s; }
+        .blueprint-grid span:nth-child(1) { top: 20%; animation: slide-horizontal 3s linear infinite; animation-delay: 0s; }
+        .blueprint-grid span:nth-child(2) { top: 50%; animation: slide-horizontal 3s linear infinite; animation-delay: 1s; }
+        .blueprint-grid span:nth-child(3) { top: 70%; animation: slide-horizontal 3s linear infinite; animation-delay: 2s; }
         .blueprint-grid .node { position: absolute; width: 6px; height: 6px; background: #00FFFF; border-radius: 50%; opacity: 0.7; animation: pulse 1.5s infinite alternate; }
         @keyframes slide-vertical { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
         @keyframes slide-horizontal { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
@@ -360,7 +360,7 @@
 <section class="ai-mockup container" id="mockup-section">
     <h2>Smart Construction, Smarter Decisions</h2>
     <div class="mockup-wrapper">
-        <img src="assets/ai-mockup-final.png" alt="AI Construction Mockup" onerror="this.src='https://via.placeholder.com/900x500?text=AI+Mockup'">
+        <img src="assets/ai-mockup-final.png" alt="AI Construction Mockup" onerror="window.handleImageError(this)">
         <div class="blueprint-grid"></div>
     </div>
 </section>
@@ -413,6 +413,15 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+    
+    // --- Safe URL Definition (Fixing the Syntax Error) ---
+    // Encoded the URL string to prevent local browser misinterpretation of characters like ? and =
+    const PLACEHOLDER_URL = 'https://via.placeholder.com/900x500%3Ftext%3DAI%2BMockup';
+
+    // Helper function to safely load a placeholder if the local image is missing
+    window.handleImageError = function(imageElement) {
+        imageElement.src = PLACEHOLDER_URL;
+    }
 
     // --- 1. Background Parallax Effect ---
     const body = document.body;
@@ -434,21 +443,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.addEventListener('mousemove', handleMouseMove);
 
-    // --- 2. Testimonial Slider Logic (FINAL FIX) ---
+    // --- 2. Testimonial Slider Logic (Now protected from the syntax error) ---
     const slider = document.getElementById('testimonialSlider');
     const dotsContainer = document.getElementById('testimonialDots');
-    const cards = document.querySelectorAll('.testimonial-card');
-    const totalSlides = cards.length;
+    const totalSlides = slider ? document.querySelectorAll('.testimonial-card').length : 0;
     let currentSlide = 0;
     const intervalTime = 5000; 
     let slideInterval;
 
     function updateSlider() {
-        // Translate the slider container by 100% of the visible area per slide
+        if (!slider) return;
+        
         const translateValue = -currentSlide * 100; 
         slider.style.transform = translateX(${translateValue}%);
 
-        // Update dots
         document.querySelectorAll('.dot').forEach((dot, index) => {
             dot.classList.remove('active');
             if (index === currentSlide) {
@@ -458,7 +466,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function startSlider() {
-        // Start the rotation loop
+        if (!slider || totalSlides === 0) return;
+        
         slideInterval = setInterval(() => {
             currentSlide = (currentSlide + 1) % totalSlides;
             updateSlider();
@@ -469,23 +478,24 @@ document.addEventListener("DOMContentLoaded", function() {
         clearInterval(slideInterval);
     }
 
-    // Manual navigation via dots
-    dotsContainer.addEventListener('click', (e) => {
-        if (e.target.classList.contains('dot')) {
-            stopSlider();
-            currentSlide = parseInt(e.target.getAttribute('data-slide'));
-            updateSlider();
+    if (dotsContainer) {
+        dotsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('dot')) {
+                stopSlider();
+                currentSlide = parseInt(e.target.getAttribute('data-slide'));
+                updateSlider();
+                startSlider();
+            }
+        });
+    }
+
+    // Delay initialization to avoid local file timing/loading errors
+    setTimeout(() => {
+        if (slider) { 
+            updateSlider(); 
             startSlider();
         }
-    });
-
-    // Initialize the slider position and START auto-sliding after a short delay
-    // This delay prevents race conditions where the slider may not have rendered fully.
-    setTimeout(() => {
-        updateSlider(); 
-        startSlider();
-    }, 100); 
-
+    }, 1000);
 
     // --- 3. Blueprint Grid Animation Setup ---
     const grid = document.querySelector('.blueprint-grid');
@@ -537,7 +547,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // --- 6. Upload Section Logic (Corrected Drag & Drop Functionality) ---
+    // --- 6. Upload Section Logic ---
     const uploadBox = document.getElementById('uploadBox');
     const fileInput = document.getElementById('fileInput');
     const uploadPreview = document.getElementById('uploadPreview');
@@ -548,18 +558,16 @@ document.addEventListener("DOMContentLoaded", function() {
     if (uploadBox && fileInput) {
         uploadBox.addEventListener('click', () => fileInput.click());
         
-        // Global prevention to stop files from opening in the browser window
         document.addEventListener('dragover', (e) => e.preventDefault());
         document.addEventListener('drop', (e) => e.preventDefault());
         
-        // Drag and Drop Handlers for the box
         uploadBox.addEventListener('dragover', (e) => {
             e.preventDefault();
-            uploadBox.style.transform = 'scale(1.1)'; // Visual feedback
+            uploadBox.style.transform = 'scale(1.1)';
         });
         
         uploadBox.addEventListener('dragleave', () => {
-            uploadBox.style.transform = 'scale(1)'; // Reset visual feedback
+            uploadBox.style.transform = 'scale(1)';
         });
         
         uploadBox.addEventListener('drop', (e) => {
@@ -574,18 +582,15 @@ document.addEventListener("DOMContentLoaded", function() {
         function handleFile(file) {
             if (!file || !file.type.match('image.*')) return; 
 
-            // Reset previous states
             uploadPreview.style.display = 'none';
             loading.style.display = 'none';
             result.style.display = 'none';
 
-            // Show preview and loading
             previewImage.src = URL.createObjectURL(file);
             uploadPreview.style.display = 'block';
             loading.style.display = 'block';
-            uploadBox.style.display = 'none'; // Hide the box after successful selection
+            uploadBox.style.display = 'none';
 
-            // Simulate AI Analysis time
             setTimeout(() => {
                 loading.style.display = 'none';
                 result.style.display = 'block';
