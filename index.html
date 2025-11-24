@@ -6,19 +6,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BuildNexus – Next Era Construction AI</title>
 <style>
-/* Base Reset */
+/* Reset and Base Styles */
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
 html{scroll-behavior:smooth;}
-body{position:relative;background:#fff;color:#2B2B2B;padding-top:70px;}
+body{background:#fff;color:#2B2B2B;padding-top:70px;overflow-x:hidden;position:relative;--bg-x:0;--bg-y:0;}
+.container{width:90%;max-width:1200px;margin:auto;position:relative;z-index:2;}
 
-/* Moving Gradient Background */
+/* Moving Gradient Background with Parallax */
 body::before{
 content:"";
-position:fixed;top:0;left:0;width:100%;height:100%;
+position:fixed;
+top:0;left:0;width:100%;height:100%;z-index:0;
 background:linear-gradient(270deg,#1E90FF,#00FFFF,#1E90FF);
 background-size:600% 600%;
 animation:moveBG 20s linear infinite;
-opacity:0.05;z-index:-1;
+opacity:0.05;
+transform: translate(var(--bg-x,0), var(--bg-y,0));
+transition: transform 0.2s ease-out;
 }
 @keyframes moveBG{
 0%{background-position:0% 50%;}
@@ -26,10 +30,7 @@ opacity:0.05;z-index:-1;
 100%{background-position:0% 50%;}
 }
 
-/* Container */
-.container{width:90%;max-width:1200px;margin:auto;position:relative;z-index:1;text-align:center;}
-
-/* Header */
+/* Header/Navigation */
 header{position:fixed;top:0;left:0;width:100%;height:70px;background:rgba(255,255,255,0.95);box-shadow:0 2px 10px rgba(0,0,0,0.05);z-index:10;}
 nav{display:flex;justify-content:space-between;align-items:center;height:100%;padding:0 20px;}
 .logo a{font-size:1.5rem;font-weight:bold;color:#1E90FF;text-decoration:none;}
@@ -40,32 +41,43 @@ nav{display:flex;justify-content:space-between;align-items:center;height:100%;pa
 .menu-toggle{display:none;font-size:24px;cursor:pointer;}
 
 /* Hero */
-.hero{display:flex;flex-direction:column;justify-content:center;align-items:center;height:calc(90vh - 70px);padding:0 20px;text-align:center;}
+.hero{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;height:calc(90vh - 70px);padding:0 20px;}
 .hero h1{font-size:3rem;color:#1E90FF;margin-bottom:1rem;}
 .hero p{font-size:1.2rem;color:#555;margin-bottom:2rem;max-width:600px;}
 .hero button{background:#1E90FF;color:white;border:none;padding:15px 30px;font-size:1rem;cursor:pointer;border-radius:6px;transition:0.3s;}
 .hero button:hover{opacity:0.9;}
 
 /* Features */
-.features-section{padding:5rem 0;text-align:center;}
-.features{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;}
-.feature-card{background:#F5F5F5;padding:30px;border-radius:12px;flex:1 1 250px;box-shadow:0 4px 12px rgba(0,0,0,0.05);transition: transform 0.3s, box-shadow 0.3s;}
+.features-section{padding:5rem 0;}
+.features{display:flex;justify-content:space-between;gap:20px;}
+.feature-card{background:#F5F5F5;padding:30px;border-radius:12px;flex:1;box-shadow:0 4px 12px rgba(0,0,0,0.05);transition: transform 0.3s, box-shadow 0.3s;}
 .feature-card:hover{transform:translateY(-10px);box-shadow:0 12px 24px rgba(0,0,0,0.1);}
 .feature-card h3{color:#1E90FF;margin-bottom:10px;}
 .feature-card p{color:#555;}
 
 /* AI Mockup */
-.ai-mockup{display:flex;flex-direction:column;justify-content:center;align-items:center;margin:5rem 0;text-align:center;}
-.ai-mockup h2{margin-bottom:3rem;}
-.mockup-wrapper{position:relative;width:100%;max-width:900px;margin:auto;}
-.mockup-wrapper img{width:100%;height:auto;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.1);}
+.ai-mockup{display:flex;flex-direction:column;justify-content:center;align-items:center;margin:5rem 0;min-height:400px;position:relative;}
+.ai-mockup h2{margin-bottom:3rem;text-align:center;}
+.mockup-wrapper{position:relative;width:100%;max-width:900px;margin:0 auto;transition: transform 0.3s ease, box-shadow 0.3s ease;text-align:center;}
+.mockup-wrapper img{width:100%;height:auto;display:block;margin:auto;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,0.1);transition: transform 0.3s ease, box-shadow 0.3s ease;}
+.mockup-wrapper:hover img{transform: translateY(-10px) scale(1.03);box-shadow:0 15px 30px rgba(0,0,0,0.2);}
 .blueprint-grid{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;z-index:2;}
+.blueprint-grid::before,.blueprint-grid::after{content:'';position:absolute;width:2px;height:100%;background:rgba(30,144,255,0.3);animation:slide-vertical 3s linear infinite;}
+.blueprint-grid::after{left:25%;animation-delay:1s;}
+.blueprint-grid span{position:absolute;width:100%;height:2px;background:rgba(30,144,255,0.2);animation:slide-horizontal 3s linear infinite;}
+.blueprint-grid span:nth-child(1){top:20%;animation-delay:0s;}
+.blueprint-grid span:nth-child(2){top:50%;animation-delay:1s;}
+.blueprint-grid span:nth-child(3){top:70%;animation-delay:2s;}
 .blueprint-grid .node{position:absolute;width:6px;height:6px;background:#00FFFF;border-radius:50%;opacity:0.7;animation:pulse 1.5s infinite alternate;}
+@keyframes slide-vertical{0%{transform:translateY(-100%);}100%{transform:translateY(100%);}}
+@keyframes slide-horizontal{0%{transform:translateX(-100%);}100%{transform:translateX(100%);}}
 @keyframes pulse{0%{transform:scale(0.5);opacity:0.4;}100%{transform:scale(1);opacity:1;}}
 
 /* Upload Section */
-.upload-section{display:flex;flex-direction:column;align-items:center;text-align:center;margin:5rem 0;}
-.upload-box{border:2px dashed #1E90FF;padding:40px;border-radius:12px;background:#F8FBFF;cursor:pointer;transition:0.3s;max-width:400px;margin:auto;}
+.upload-section{text-align:center;margin:5rem 0;}
+.upload-section h2{text-align:center;}
+.upload-subtext{color:#555;margin-bottom:1.5rem;}
+.upload-box{border:2px dashed #1E90FF;padding:40px;border-radius:12px;background:#F8FBFF;cursor:pointer;transition:0.3s;max-width:400px;margin:0 auto;}
 .upload-box:hover
 .upload-preview{margin-top:2rem;display:none;text-align:center;}
 .upload-preview img{max-width:400px;width:100%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1);}
@@ -75,9 +87,9 @@ nav{display:flex;justify-content:space-between;align-items:center;height:100%;pa
 .result{display:none;margin-top:2rem;color:green;font-weight:bold;text-align:center;}
 
 /* Steps */
-.steps-section{padding:5rem 0;text-align:center;}
-.steps{display:flex;justify-content:center;flex-wrap:wrap;gap:20px;margin-bottom:5rem;}
-.step{text-align:center;padding:20px;flex:1 1 200px;border-radius:12px;background:#F5F5F5;transition: transform 0.3s, box-shadow 0.3s;}
+.steps-section{padding:5rem 0;}
+.steps{display:flex;justify-content:space-between;gap:20px;margin-bottom:5rem;}
+.step{text-align:center;padding:20px;flex:1;border-radius:12px;background:#F5F5F5;transition: transform 0.3s, box-shadow 0.3s;}
 .step:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,0,0,0.08);}
 .step h4{color:#1E90FF;margin-bottom:10px;}
 
@@ -87,12 +99,18 @@ nav{display:flex;justify-content:space-between;align-items:center;height:100%;pa
 .cta button:hover{opacity:0.9;}
 
 /* Contact */
-.contact{display:flex;flex-direction:column;align-items:center;text-align:center;margin:4rem 0;padding:2rem 0;background:#F5F5F5;}
-.contact form{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;max-width:600px;margin:auto;}
+.contact{text-align:center;margin:4rem 0;padding:2rem 0;background:#F5F5F5;}
+.contact h3{color:#1E90FF;margin-bottom:10px;}
+.contact p{color:#555;margin-bottom:20px;}
+.contact form{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;max-width:600px;margin:0 auto;}
 .contact input[type="email"]{padding:12px 20px;border-radius:6px;border:1px solid #ccc;font-size:1rem;flex:1;min-width:250px;}
 .contact button{padding:12px 30px;background:#1E90FF;color:white;border:none;border-radius:6px;cursor:pointer;transition:0.3s;}
 .contact button:hover{opacity:0.9;}
 #form-message{margin-top:15px;font-weight:bold;color:green;display:none;}
+
+/* Fade-in */
+.fade-in{opacity:0;transform:translateY(30px);transition: opacity 1s ease-out, transform 1s ease-out;}
+.fade-in.visible{opacity:1;transform:translateY(0);}
 
 /* Footer */
 footer{text-align:center;padding:2rem 0;color:#888;font-size:0.9rem;}
@@ -100,7 +118,9 @@ footer{text-align:center;padding:2rem 0;color:#888;font-size:0.9rem;}
 /* Responsive */
 @media(max-width:900px){
 .features,.steps{flex-direction:column;}
+.hero{align-items:center;text-align:center;}
 .hero h1{font-size:2.5rem;}
+.ai-mockup{margin:3rem 0;}
 .nav-links{display:none;flex-direction:column;position:absolute;top:70px;left:0;width:100%;background:rgba(255,255,255,0.98);padding:10px 0;box-shadow:0 5px 10px rgba(0,0,0,0.05);}
 .nav-links.active{display:flex;}
 .nav-links li{margin:10px 0;text-align:center;}
@@ -160,7 +180,7 @@ footer{text-align:center;padding:2rem 0;color:#888;font-size:0.9rem;}
 
 <section class="upload-section container fade-in" id="upload-section">
 <h2>Try BuildNexus AI</h2>
-<p>Upload a sketch, floor plan, or material list.</p>
+<p class="upload-subtext">Upload a sketch, floor plan, or material list.</p>
 <div class="upload-box" id="uploadBox">
 <p>Drag & Drop Files Here</p>
 <span>or click to upload</span>
@@ -174,8 +194,26 @@ footer{text-align:center;padding:2rem 0;color:#888;font-size:0.9rem;}
 <p>Analyzing your file with BuildNexus AI...</p>
 </div>
 <div class="result" id="result">
-<!-- Dynamic AI report will appear here -->
+<h3>AI Analysis Complete ✔</h3>
+<p>Your estimation, planning & safety insights are ready.</p>
 </div>
+</section>
+
+<!-- Steps -->
+
+<section class="steps-section container fade-in" id="process">
+<h2>Our Simple 3-Step Process</h2>
+<div class="steps">
+<div class="step"><h4>1. Upload Plan</h4><p>Share sketches, drawings, or material lists instantly.</p></div>
+<div class="step"><h4>2. AI Analysis</h4><p>Our AI calculates cost, timelines, and safety risks in real-time.</p></div>
+<div class="step"><h4>3. Execute & Track</h4><p>Receive actionable plans and updates throughout the project.</p></div>
+</div>
+</section>
+
+<!-- CTA -->
+
+<section class="cta fade-in" id="cta-section">
+<button onclick="window.location.href='#contact'">Join BuildNexus Today</button>
 </section>
 
 <!-- Contact -->
@@ -193,7 +231,9 @@ footer{text-align:center;padding:2rem 0;color:#888;font-size:0.9rem;}
 <footer>&copy; 2025 BuildNexus. All rights reserved.</footer>
 
 <script>
-// Fade-in on scroll
+document.addEventListener("DOMContentLoaded",function(){
+
+// Fade-in on Scroll
 const faders=document.querySelectorAll('.fade-in');
 const observer=new IntersectionObserver(entries=>{
 entries.forEach(entry=>{
@@ -202,14 +242,10 @@ if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserv
 },{threshold:0.2});
 faders.forEach(fader=>observer.observe(fader));
 
-// Responsive menu
-const menuToggle=document.getElementById('menuToggle');
-const navLinks=document.getElementById('navLinks');
-menuToggle.addEventListener('click',()=>navLinks.classList.toggle('active'));
-
-// Blueprint grid nodes
+// Blueprint Grid
 const grid=document.querySelector('.blueprint-grid');
 if(grid){
+for(let i=0;i<3;i++){const line=document.createElement('span');grid.appendChild(line);}
 for(let i=0;i<15;i++){
 const node=document.createElement('div');
 node.classList.add('node');
@@ -218,16 +254,24 @@ node.style.left=Math.random()*90+'%';
 grid.appendChild(node);}
 }
 
-// Newsletter form
+// Newsletter Form
 const form=document.getElementById('newsletter-form');
 const message=document.getElementById('form-message');
 form.addEventListener('submit',function(e){
 e.preventDefault();
 message.style.display='block';
-setTimeout(()=>{message.style.display='none';form.reset();},3000);
+message.textContent='Success! Email received for beta access.';
+setTimeout(()=>{message.style.display='none';message.textContent='';form.reset();},3000);
 });
 
-// Upload section
+// Responsive Navigation Toggle
+const menuToggle=document.getElementById('menuToggle');
+const navLinks=document.getElementById('navLinks');
+const links=navLinks.querySelectorAll('a');
+menuToggle.addEventListener('click',()=>{navLinks.classList.toggle('active');});
+links.forEach(link=>{link.addEventListener('click',()=>{if(window.innerWidth<=900){navLinks.classList.remove('active');}});});
+
+// Upload Section
 const uploadBox=document.getElementById('uploadBox');
 const fileInput=document.getElementById('fileInput');
 const uploadPreview=document.getElementById('uploadPreview');
@@ -235,45 +279,33 @@ const previewImage=document.getElementById('previewImage');
 const loading=document.getElementById('loading');
 const result=document.getElementById('result');
 
-uploadBox.addEventListener('click',()=>fileInput.click());
-uploadBox.addEventListener('dragover',(e)=>{e.preventDefault();uploadBox.style.background='#E8F4FF';});
-uploadBox.addEventListener('dragleave',()=>{uploadBox.style.background='#F8FBFF';});
-uploadBox.addEventListener('drop',(e)=>{e.preventDefault();handleFile(e.dataTransfer.files[0]);});
-fileInput.addEventListener('change',(e)=>handleFile(e.target.files[0]));
+uploadBox.addEventListener('click', () => fileInput.click());
+uploadBox.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadBox.style.background = '#E8F4FF';
+});
+uploadBox.addEventListener('dragleave', () => {
+    uploadBox.style.background = '#F8FBFF';
+});
+uploadBox.addEventListener('drop', (e) => {
+    e.preventDefault();
+    handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 
-// Dynamic AI report generator
-function generateAIReport() {
-  const cost = (Math.random() * (200000 - 50000) + 50000).toFixed(0);
-  const timeline = Math.floor(Math.random() * (12 - 2) + 2);
-  const safetyLevels = ['Low', 'Moderate', 'High'];
-  const safety = safetyLevels[Math.floor(Math.random() * safetyLevels.length)];
-  return { cost, timeline, safety };
+function handleFile(file) {
+    if (!file) return;
+    previewImage.src = URL.createObjectURL(file);
+    uploadPreview.style.display = 'block';
+    loading.style.display = 'block';
+    result.style.display = 'none';
+
+    setTimeout(() => {
+        loading.style.display = 'none';
+        result.style.display = 'block';
+    }, 3000);
 }
-
-// Modified handleFile function
-function handleFile(file){
-  if(!file) return;
-  previewImage.src = URL.createObjectURL(file);
-  uploadPreview.style.display = 'block';
-  loading.style.display = 'block';
-  result.innerHTML = '';
-
-  setTimeout(()=>{
-    loading.style.display = 'none';
-    const report = generateAIReport();
-    result.innerHTML = `
-      <h3>AI Analysis Complete ✔</h3>
-      <p><strong>Estimated Project Cost:</strong> £${report.cost}</p>
-      <p><strong>Estimated Timeline:</strong> ${report.timeline} months</p>
-      <p><strong>Safety Risk Level:</strong> ${report.safety}</p>
-      <button id="signupBtn">Sign Up for Beta</button>
-    `;
-    result.style.display = 'block';
-
-    const signupBtn = document.getElementById('signupBtn');
-    signupBtn.addEventListener('click', () => { window.location.href = '#contact'; });
-  }, 3000);
-}
+});
 </script>
 
 </body>
