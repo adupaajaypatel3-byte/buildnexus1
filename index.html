@@ -15,7 +15,6 @@
             padding-top: 70px; 
             overflow-x: hidden; 
             position: relative; 
-            /* CSS Variables for Parallax controlled by JS */
             --bg-x: 0; 
             --bg-y: 0; 
         }
@@ -30,7 +29,6 @@
             background-size: 600% 600%;
             animation: moveBG 20s linear infinite;
             opacity: 0.05;
-            /* Apply JS-controlled Parallax movement */
             transform: translate(var(--bg-x, 0), var(--bg-y, 0));
             transition: transform 0.2s ease-out;
         }
@@ -51,7 +49,15 @@
         .menu-toggle { display: none; font-size: 24px; cursor: pointer; }
 
         /* Hero */
-        .hero { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; height: calc(90vh - 70px); padding: 0 20px; }
+        .hero { 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: flex-start; 
+            min-height: calc(100vh - 70px); 
+            padding: 0 20px; 
+            padding-top: 50px; 
+        }
         .hero h1 { font-size: 3rem; color: #1E90FF; margin-bottom: 1rem; }
         .hero p { font-size: 1.2rem; color: #555; margin-bottom: 2rem; max-width: 600px; }
         .hero button { background: #1E90FF; color: white; border: none; padding: 15px 30px; font-size: 1rem; cursor: pointer; border-radius: 6px; transition: 0.3s; }
@@ -64,6 +70,67 @@
         .feature-card:hover { transform: translateY(-10px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
         .feature-card h3 { color: #1E90FF; margin-bottom: 10px; }
         .feature-card p { color: #555; }
+
+        /* Testimonials Section (UPDATED) */
+        .testimonials-section { 
+            padding: 5rem 0; 
+            background: #F8FBFF;
+            text-align: center;
+        }
+        .testimonials-section h2 {
+            margin-bottom: 2rem;
+        }
+        .slider-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+        .testimonial-slider {
+            /* Width calculation for N slides: 100% * N */
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother transition */
+            width: 300%; 
+        }
+        .testimonial-card {
+            width: 33.33%; 
+            flex-shrink: 0;
+            padding: 40px;
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            text-align: center;
+        }
+        .testimonial-card p {
+            font-style: italic;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #444;
+        }
+        .testimonial-card h4 {
+            color: #1E90FF;
+            margin-top: 10px;
+        }
+        .testimonial-dots {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .dot {
+            height: 10px;
+            width: 10px;
+            margin: 0 5px;
+            background-color: #ccc;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .dot.active {
+            background-color: #1E90FF;
+        }
+        /* End Testimonials Section */
+
 
         /* AI Mockup */
         .ai-mockup { display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 5rem 0; min-height: 400px; position: relative; }
@@ -87,17 +154,67 @@
         .upload-section { text-align: center; margin: 5rem 0; }
         .upload-section h2 { text-align: center; }
         .upload-subtext { color: #555; margin-bottom: 1.5rem; }
-        .upload-box { border: 2px dashed #1E90FF; padding: 40px; border-radius: 12px; background: #F8FBFF; cursor: pointer; transition: 0.3s; max-width: 400px; margin: 0 auto; }
+        
+        /* --- BLACK HOLE STYLING --- */
+        .upload-box { 
+            background: radial-gradient(circle at center, #111 0%, #000 70%); 
+            border: 2px solid #000;
+            box-shadow: 0 0 40px rgba(30, 144, 255, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.9);
+            color: #00FFFF;
+            border-radius: 50%; 
+            height: 300px; 
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto; 
+            cursor: pointer; 
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
         .upload-box:hover { 
-            background: #E8F4FF; 
-            border-color: #104E8B; 
+            transform: scale(1.05) rotate(3deg); 
+            box-shadow: 0 0 60px rgba(30, 144, 255, 0.8), inset 0 0 30px rgba(0, 0, 0, 0.95);
         } 
+        .upload-box::after {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(30, 144, 255, 0.1),
+                rgba(30, 144, 255, 0.1) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            animation: swirl 60s linear infinite;
+            opacity: 0.1;
+        }
+
+        @keyframes swirl {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .upload-box p, .upload-box span {
+            z-index: 10;
+        }
+        
+        /* --- END BLACK HOLE STYLING --- */
+
         .upload-preview { margin-top: 2rem; display: none; text-align: center; }
         .upload-preview img { max-width: 400px; width: 100%; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
         .loading { display: none; margin-top: 2rem; text-align: center; }
         .spinner { width: 40px; height: 40px; border: 4px solid #1E90FF; border-top-color: transparent; border-radius: 50%; margin: 0 auto 10px; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .result { display: none; margin-top: 2rem; color: green; font-weight: bold; text-align: center; }
+
+        /* Ensure content is visible */
+        .fade-in { opacity: 1; transform: translateY(0); transition: none; } 
 
         /* Steps */
         .steps-section { padding: 5rem 0; }
@@ -121,25 +238,63 @@
         .contact button:hover { opacity: 0.9; }
         #form-message { margin-top: 15px; font-weight: bold; color: green; display: none; }
 
-        /* Fade-in */
-        .fade-in { opacity: 0; transform: translateY(30px); transition: opacity 1s ease-out, transform 1s ease-out; }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
-
         /* Footer */
         footer { text-align: center; padding: 2rem 0; color: #888; font-size: 0.9rem; }
 
         /* Responsive */
         @media(max-width: 900px) {
+            /* General Layout Stack */
             .features, .steps { flex-direction: column; }
-            .hero { align-items: center; text-align: center; }
+
+            /* Hero Section Centering */
+            .hero { 
+                align-items: center; 
+                text-align: center; 
+                padding-top: 20px;
+            }
             .hero h1 { font-size: 2.5rem; }
-            .ai-mockup { margin: 3rem 0; }
-            .nav-links { display: none; flex-direction: column; position: absolute; top: 70px; left: 0; width: 100%; background: rgba(255,255,255,0.98); padding: 10px 0; box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
+
+            /* Testimonials adjustment */
+            .testimonial-card {
+                padding: 20px;
+                font-size: 0.9rem;
+            }
+
+            /* Mobile Navigation Overrides */
+            .nav-links { 
+                display: none; 
+                flex-direction: column; 
+                position: absolute; 
+                top: 70px; 
+                left: 0; 
+                width: 100%; 
+                background: rgba(255,255,255,0.98); 
+                padding: 10px 0; 
+                box-shadow: 0 5px 10px rgba(0,0,0,0.05); 
+            }
             .nav-links.active { display: flex; }
             .nav-links li { margin: 10px 0; text-align: center; }
             .menu-toggle { display: block; }
-            .upload-box { max-width: 100%; }
+            
+            /* Upload Section Sizing */
+            .upload-box { 
+                max-width: 250px; 
+                max-height: 250px;
+                width: 250px;
+                height: 250px;
+            }
             .upload-preview img { max-width: 100%; }
+
+            /* Contact Form Adjustment */
+            .contact form {
+                flex-direction: column;
+                max-width: 350px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .contact input[type="email"] {
+                min-width: 100%;
+            }
         }
     </style>
 </head>
@@ -150,6 +305,7 @@
         <div class="logo"><a href="#hero">BuildNexus</a></div>
         <ul class="nav-links" id="navLinks">
             <li><a href="#features-section">Features</a></li>
+            <li><a href="#testimonials-section">Reviews</a></li>
             <li><a href="#mockup-section">AI Insight</a></li>
             <li><a href="#upload-section">Try AI</a></li>
             <li><a href="#process">Process</a></li>
@@ -160,13 +316,13 @@
     </nav>
 </header>
 
-<section class="hero container fade-in" id="hero">
+<section class="hero container" id="hero">
     <h1>BuildNexus</h1>
     <p>Revolutionizing construction with AI-powered cost estimation, planning, and safety compliance – all in real-time.</p>
     <button onclick="window.location.href='#features-section'">Explore Features</button>
 </section>
 
-<section class="features-section container fade-in" id="features-section">
+<section class="features-section container" id="features-section">
     <h2>Core AI Capabilities</h2>
     <div class="features">
         <div class="feature-card"><h3>Instant Quotations</h3><p>Get precise material & labor estimates in seconds from sketches or lists.</p></div>
@@ -175,7 +331,34 @@
     </div>
 </section>
 
-<section class="ai-mockup container fade-in" id="mockup-section">
+<section class="testimonials-section" id="testimonials-section">
+    <div class="container">
+        <h2>What Our Builders Say</h2>
+        <div class="slider-container">
+            <div class="testimonial-slider" id="testimonialSlider">
+                <div class="testimonial-card">
+                    <p>"BuildNexus cut my estimation time by 80%. It's the most reliable tool in my construction arsenal now."</p>
+                    <h4>— Mark J., Project Manager, Apex Builds</h4>
+                </div>
+                <div class="testimonial-card">
+                    <p>"The safety compliance checks alone are worth the subscription. Never worry about missed codes again."</p>
+                    <h4>— Sarah T., Lead Engineer, Titan Group</h4>
+                </div>
+                <div class="testimonial-card">
+                    <p>"Feeding a sketch into the Nexus and getting a full material list back instantly felt like magic. Game changer."</p>
+                    <h4>— Ben K., Independent Contractor</h4>
+                </div>
+            </div>
+        </div>
+        <div class="testimonial-dots" id="testimonialDots">
+            <span class="dot active" data-slide="0"></span>
+            <span class="dot" data-slide="1"></span>
+            <span class="dot" data-slide="2"></span>
+        </div>
+    </div>
+</section>
+
+<section class="ai-mockup container" id="mockup-section">
     <h2>Smart Construction, Smarter Decisions</h2>
     <div class="mockup-wrapper">
         <img src="assets/ai-mockup-final.png" alt="AI Construction Mockup" onerror="this.src='https://via.placeholder.com/900x500?text=AI+Mockup'">
@@ -183,12 +366,12 @@
     </div>
 </section>
 
-<section class="upload-section container fade-in" id="upload-section">
-    <h2>Try BuildNexus AI</h2>
-    <p class="upload-subtext">Upload a sketch, floor plan, or material list.</p>
+<section class="upload-section container" id="upload-section">
+    <h2>Feed the Nexus 🕳</h2>
+    <p class="upload-subtext">Drag your plan, sketch, or material list into the vortex for instant analysis.</p>
     <div class="upload-box" id="uploadBox">
-        <p>Drag & Drop Files Here</p>
-        <span>or click to upload</span>
+        <p>Drop File Here</p>
+        <span>or click to open portal</span>
         <input type="file" id="fileInput" accept="image/*" hidden>
     </div>
     <div class="upload-preview" id="uploadPreview">
@@ -204,7 +387,7 @@
     </div>
 </section>
 
-<section class="steps-section container fade-in" id="process">
+<section class="steps-section container" id="process">
     <h2>Our Simple 3-Step Process</h2>
     <div class="steps">
         <div class="step"><h4>1. Upload Plan</h4><p>Share sketches, drawings, or material lists instantly.</p></div>
@@ -213,11 +396,11 @@
     </div>
 </section>
 
-<section class="cta fade-in" id="cta-section">
+<section class="cta" id="cta-section">
     <button onclick="window.location.href='#contact'">Join BuildNexus Today</button>
 </section>
 
-<section class="contact container fade-in" id="contact">
+<section class="contact container" id="contact">
     <h3>Stay Updated with BuildNexus</h3>
     <p>Subscribe to get updates, project insights, and beta access.</p>
     <form id="newsletter-form">
@@ -252,17 +435,52 @@ document.addEventListener("DOMContentLoaded", function() {
 
     document.addEventListener('mousemove', handleMouseMove);
 
-    // --- 2. Fade-in on Scroll ---
-    const faders = document.querySelectorAll('.fade-in');
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
+    // --- 2. Testimonial Slider Logic (CORRECTED) ---
+    const slider = document.getElementById('testimonialSlider');
+    const dotsContainer = document.getElementById('testimonialDots');
+    const cards = document.querySelectorAll('.testimonial-card');
+    const totalSlides = cards.length;
+    let currentSlide = 0;
+    const intervalTime = 5000; 
+    let slideInterval;
+
+    function updateSlider() {
+        const translateValue = -currentSlide * (100 / totalSlides);
+        slider.style.transform = translateX(${translateValue}%);
+
+        document.querySelectorAll('.dot').forEach((dot, index) => {
+            dot.classList.remove('active');
+            if (index === currentSlide) {
+                dot.classList.add('active');
             }
         });
-    }, { threshold: 0.2 });
-    faders.forEach(fader => observer.observe(fader));
+    }
+
+    function startSlider() {
+        slideInterval = setInterval(() => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlider();
+        }, intervalTime);
+    }
+
+    function stopSlider() {
+        clearInterval(slideInterval);
+    }
+
+    // Manual navigation via dots
+    dotsContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('dot')) {
+            stopSlider();
+            currentSlide = parseInt(e.target.getAttribute('data-slide'));
+            updateSlider();
+            startSlider();
+        }
+    });
+
+    // Initialize the slider position and start auto-sliding
+    updateSlider(); 
+    startSlider();
+
 
     // --- 3. Blueprint Grid Animation Setup ---
     const grid = document.querySelector('.blueprint-grid');
@@ -280,7 +498,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // --- 4. Newsletter Submission ---
+    // --- 4. Newsletter Submission Logic ---
     const form = document.getElementById('newsletter-form');
     const message = document.getElementById('form-message');
     if (form) {
@@ -314,7 +532,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // --- 6. Upload Section Logic ---
+    // --- 6. Upload Section Logic (Corrected Drag & Drop Functionality) ---
     const uploadBox = document.getElementById('uploadBox');
     const fileInput = document.getElementById('fileInput');
     const uploadPreview = document.getElementById('uploadPreview');
@@ -325,46 +543,18 @@ document.addEventListener("DOMContentLoaded", function() {
     if (uploadBox && fileInput) {
         uploadBox.addEventListener('click', () => fileInput.click());
         
-        // Drag and Drop Handlers
+        // Global prevention to stop files from opening in the browser window
+        document.addEventListener('dragover', (e) => e.preventDefault());
+        document.addEventListener('drop', (e) => e.preventDefault());
+        
+        // Drag and Drop Handlers for the box
         uploadBox.addEventListener('dragover', (e) => {
             e.preventDefault();
-            uploadBox.style.background = '#E8F4FF';
+            uploadBox.style.transform = 'scale(1.1)'; // Visual feedback
         });
         
         uploadBox.addEventListener('dragleave', () => {
-            uploadBox.style.background = '#F8FBFF';
+            uploadBox.style.transform = 'scale(1)'; // Reset visual feedback
         });
         
-        uploadBox.addEventListener('drop', (e) => {
-            e.preventDefault();
-            handleFile(e.dataTransfer.files[0]);
-            uploadBox.style.background = '#F8FBFF'; 
-        });
-
-        fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
-
-        function handleFile(file) {
-            if (!file) return;
-
-            // Reset previous states
-            uploadPreview.style.display = 'none';
-            loading.style.display = 'none';
-            result.style.display = 'none';
-
-            // Show preview and loading
-            previewImage.src = URL.createObjectURL(file);
-            uploadPreview.style.display = 'block';
-            loading.style.display = 'block';
-
-            // Simulate AI Analysis time
-            setTimeout(() => {
-                loading.style.display = 'none';
-                result.style.display = 'block';
-            }, 3000);
-        }
-    }
-});
-</script>
-
-</body>
-</html>
+        uploadBox.addEventListener('drop', (e)
